@@ -38,23 +38,28 @@ def get_dataloaders(batch_size):
     return train_dataloader, test_dataloader
 
 
-if __name__ == "__main__":
-
-    args = parser.parse_args()
+def run(num_epochs, batch_size, lr):
 
     # Get cpu or gpu device for training.
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("Using {} device".format(device))
 
     net = model.Net().to(device)
-    train_dataloader, test_dataloader = get_dataloaders(args.batch_size)
+    train_dataloader, test_dataloader = get_dataloaders(batch_size)
 
     r = runner.Runner(
         net=net,
         train_dataloader=train_dataloader,
         test_dataloader=test_dataloader,
         device=device,
-        lr=args.learning_rate,
+        lr=lr,
     )
 
-    r.train(num_epochs=args.num_epochs)
+    r.train(num_epochs=num_epochs)
+
+
+if __name__ == "__main__":
+
+    args = parser.parse_args()
+
+    run(num_epochs=args.num_epochs, batch_size=args.batch_size, lr=args.learning_rate)
